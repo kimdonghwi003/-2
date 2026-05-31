@@ -62,12 +62,20 @@ export default function MatchListPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-[#800020]">스포츠 매칭</h1>
-        <Link
-          href="/match/write"
-          className="px-4 py-2 bg-[#800020] text-white rounded-lg text-sm font-semibold hover:bg-[#5c1a24] transition-colors"
-        >
-          + 매치 작성
-        </Link>
+        <div className="flex gap-2">
+          <Link
+            href="/match/facility"
+            className="px-4 py-2 border border-[#800020] text-[#800020] rounded-lg text-sm font-semibold hover:bg-[#800020] hover:text-white transition-colors"
+          >
+            🏟️ 시설 현황
+          </Link>
+          <Link
+            href="/match/write"
+            className="px-4 py-2 bg-[#800020] text-white rounded-lg text-sm font-semibold hover:bg-[#5c1a24] transition-colors"
+          >
+            + 매치 작성
+          </Link>
+        </div>
       </div>
 
       <div className="flex gap-3 mb-6 flex-wrap">

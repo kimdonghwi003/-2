@@ -20,7 +20,7 @@ export const STATIC_CONTESTS: Contest[] = [
     deadline: '2026-07-31',
     prize: '최우수상 200만원',
     description: '충북대학교 재학생 및 휴학생을 대상으로 혁신적인 창업 아이디어를 모집합니다.',
-    url: 'https://startup.chungbuk.ac.kr',
+    url: 'https://startup.chungbuk.ac.kr/kor/board/notice.do',
   },
   {
     id: 2,
@@ -31,7 +31,7 @@ export const STATIC_CONTESTS: Contest[] = [
     deadline: '2026-08-15',
     prize: '대상 500만원',
     description: '대전·충청권 대학생 SW 인재 발굴을 위한 24시간 해커톤 대회.',
-    url: 'https://dicia.or.kr',
+    url: 'https://dicia.or.kr/prog/business/view.do?menuNo=200028',
   },
   {
     id: 3,
@@ -42,7 +42,7 @@ export const STATIC_CONTESTS: Contest[] = [
     deadline: '2026-07-20',
     prize: '최우수 100만원',
     description: '세종시 스마트시티 구현을 위한 창의적인 아이디어를 모집합니다.',
-    url: 'https://www.sejong.go.kr',
+    url: 'https://www.sejong.go.kr/prog/department/portlet/notice_list.do?menuNo=300025',
   },
   {
     id: 4,
@@ -53,7 +53,7 @@ export const STATIC_CONTESTS: Contest[] = [
     deadline: '2026-08-31',
     prize: '최우수 50만원',
     description: '환경 보호의 중요성을 알리는 UCC 영상 작품을 모집합니다.',
-    url: 'https://www.chungnam.go.kr',
+    url: 'https://www.chungnam.go.kr/choongnamEnv/cnEnvIndex.do',
   },
   {
     id: 5,
@@ -64,7 +64,7 @@ export const STATIC_CONTESTS: Contest[] = [
     deadline: '2026-09-15',
     prize: '최우수 300만원',
     description: '인공지능 및 머신러닝 분야 우수 논문을 발굴하는 전국 대회.',
-    url: 'https://www.ksai.or.kr',
+    url: 'https://www.ksai.or.kr/conference/conf_notice.html',
   },
   {
     id: 6,
@@ -75,7 +75,7 @@ export const STATIC_CONTESTS: Contest[] = [
     deadline: '2026-07-15',
     prize: '대상 150만원',
     description: '충북 청년들의 창의적인 디자인 역량을 발휘할 수 있는 공모전.',
-    url: 'https://www.chungbuk.go.kr',
+    url: 'https://www.chungbuk.go.kr/www/contents.do?key=2830',
   },
   {
     id: 7,
@@ -86,7 +86,7 @@ export const STATIC_CONTESTS: Contest[] = [
     deadline: '2026-08-01',
     prize: '투자 연계 기회',
     description: '유망 스타트업 아이디어를 투자자에게 피칭하는 대회.',
-    url: 'https://ccei.creativekorea.or.kr/daejeon',
+    url: 'https://ccei.creativekorea.or.kr/daejeon/program/intro.do',
   },
   {
     id: 8,
@@ -97,7 +97,7 @@ export const STATIC_CONTESTS: Contest[] = [
     deadline: '2026-09-30',
     prize: '최우수 200만원',
     description: '실제 기업의 마케팅 과제를 해결하는 전략을 제안하는 공모전.',
-    url: 'https://www.kma.re.kr',
+    url: 'https://www.contestkorea.com/sub/list.php?int_gbn=1&query=%EB%A7%88%EC%BC%80%ED%8C%85',
   },
   {
     id: 9,
@@ -108,7 +108,7 @@ export const STATIC_CONTESTS: Contest[] = [
     deadline: '2026-08-20',
     prize: '최우수 100만원',
     description: '충남의 관광 매력을 알릴 창의적인 콘텐츠를 모집합니다.',
-    url: 'https://www.chungnam.go.kr/tour',
+    url: 'https://www.chungnam.go.kr/chungnamTour/index.do',
   },
   {
     id: 10,
@@ -119,7 +119,7 @@ export const STATIC_CONTESTS: Contest[] = [
     deadline: '2026-07-25',
     prize: '최우수 80만원',
     description: '세종시 청년을 위한 혁신적인 정책 아이디어를 제안하는 공모전.',
-    url: 'https://youth.sejong.go.kr',
+    url: 'https://youth.sejong.go.kr/youth/board/noticeList.do',
   },
   {
     id: 11,
@@ -130,7 +130,7 @@ export const STATIC_CONTESTS: Contest[] = [
     deadline: '2026-10-15',
     prize: '대상 500만원',
     description: '금융 혁신을 위한 창의적인 아이디어를 모집합니다.',
-    url: 'https://www.fss.or.kr',
+    url: 'https://www.fss.or.kr/fss/main/contents.do?menuNo=200065',
   },
   {
     id: 12,
@@ -141,7 +141,7 @@ export const STATIC_CONTESTS: Contest[] = [
     deadline: '2026-06-30',
     prize: '최우수 100만원',
     description: '공학적 문제 해결을 위한 창의적 설계 및 제작 경진대회.',
-    url: 'https://eng.chungbuk.ac.kr',
+    url: 'https://eng.chungbuk.ac.kr/kor/board/notice.do',
   },
   {
     id: 13,
@@ -152,7 +152,7 @@ export const STATIC_CONTESTS: Contest[] = [
     deadline: '2026-09-01',
     prize: '대상 300만원',
     description: '제조업 혁신을 위한 스마트 팩토리 아이디어 공모전.',
-    url: 'https://www.daejeon.go.kr',
+    url: 'https://www.daejeon.go.kr/rch/index.do',
   },
   {
     id: 14,
@@ -163,7 +163,7 @@ export const STATIC_CONTESTS: Contest[] = [
     deadline: '2026-08-31',
     prize: '대상 200만원',
     description: '대학생의 창의적인 시각으로 담아낸 사진과 영상 작품을 모집합니다.',
-    url: 'https://www.arte.or.kr',
+    url: 'https://www.arte.or.kr/notice/noticeList.do',
   },
   {
     id: 15,
@@ -174,7 +174,7 @@ export const STATIC_CONTESTS: Contest[] = [
     deadline: '2026-07-31',
     prize: '최우수 120만원',
     description: '스마트 농업 기술을 활용한 혁신적인 농업 아이디어를 모집합니다.',
-    url: 'https://www.cnat.go.kr',
+    url: 'https://www.cnat.go.kr/CNABRD02/board/list.do?board_id=BOARD_0000000011',
   },
   {
     id: 16,
@@ -185,7 +185,7 @@ export const STATIC_CONTESTS: Contest[] = [
     deadline: '2026-10-31',
     prize: '최우수 300만원',
     description: '사회 문제 해결을 위한 혁신적인 사회적 기업 아이디어 공모전.',
-    url: 'https://www.socialenterprise.or.kr',
+    url: 'https://www.socialenterprise.or.kr/kosea/board/list.do?board_id=BOARD_0000000095',
   },
   {
     id: 17,
@@ -196,7 +196,7 @@ export const STATIC_CONTESTS: Contest[] = [
     deadline: '2026-08-15',
     prize: '최우수 100만원',
     description: '미래 교육 혁신을 위한 스마트 교육 아이디어 및 콘텐츠 공모전.',
-    url: 'https://www.sje.go.kr',
+    url: 'https://www.sje.go.kr/board.do?board_id=2&m=0804',
   },
 ]
 

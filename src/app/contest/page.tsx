@@ -82,9 +82,10 @@ export default function ContestPage() {
                   href={contest.url}
                   target="_blank"
                   rel="noopener noreferrer"
+                  title={`${contest.organizer} 공모전 페이지`}
                   className="flex-1 py-2 text-center text-sm border border-[#800020] text-[#800020] rounded-lg hover:bg-[#800020] hover:text-white transition-colors"
                 >
-                  공모전 보기
+                  공모전 보기 ↗
                 </a>
                 <Link
                   href={`/contest/write?contestId=${contest.id}`}
