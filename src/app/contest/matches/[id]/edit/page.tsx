@@ -52,6 +52,12 @@ export default function ContestTeamEditPage({ params }: { params: Promise<{ id: 
     setError('')
     setLoading(true)
     const roles = form.required_roles.split(',').map((s) => s.trim()).filter(Boolean)
+    const desc = form.description.trim()
+    if (desc && desc.length < 10) {
+      setError('소개글은 최소 10자 이상 입력해주세요.')
+      setLoading(false)
+      return
+    }
     try {
       const res = await fetch(`/api/contest/teams/${id}`, {
         method: 'PATCH',
@@ -59,7 +65,7 @@ export default function ContestTeamEditPage({ params }: { params: Promise<{ id: 
         body: JSON.stringify({
           contest_id: Number(form.contest_id),
           team_name: form.team_name,
-          description: form.description || null,
+          description: desc || null,
           max_size: form.max_size,
           required_roles: roles,
         }),
@@ -113,12 +119,13 @@ export default function ContestTeamEditPage({ params }: { params: Promise<{ id: 
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">팀 소개</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">팀 소개 (선택, 입력 시 최소 10자)</label>
             <textarea
               rows={4}
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
-              placeholder="팀에 대한 소개 및 원하는 팀원 유형을 작성해주세요"
+              placeholder="팀에 대한 소개 및 원하는 팀원 유형을 작성해주세요 (최소 10자)"
+              minLength={10}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#800020] text-sm resize-none"
             />
           </div>

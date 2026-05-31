@@ -19,6 +19,19 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
   const { data: match } = await supabase.from('matches').select('author_id').eq('id', id).single()
   if (!match || match.author_id !== user.id) return NextResponse.json({ error: '권한이 없습니다.' }, { status: 403 })
 
+  if ('description' in body) {
+    const desc = body.description
+    if (!desc || desc.trim() === '') {
+      body.description = null
+    } else if (desc.trim().length < 10) {
+      return NextResponse.json({ error: '소개글은 최소 10자 이상 입력해주세요.' }, { status: 400 })
+    } else if (desc.trim().length > 500) {
+      return NextResponse.json({ error: '소개글은 최대 500자까지 입력 가능합니다.' }, { status: 400 })
+    } else {
+      body.description = desc.trim()
+    }
+  }
+
   const { data, error } = await supabase.from('matches').update(body).eq('id', id).select().single()
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
   return NextResponse.json(data)

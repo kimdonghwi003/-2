@@ -75,10 +75,16 @@ export default function MatchEditPage({ params }: { params: Promise<{ id: string
     setError('')
     setLoading(true)
     try {
+      const desc = form.description.trim()
+      if (desc && desc.length < 10) {
+        setError('소개글은 최소 10자 이상 입력해주세요.')
+        setLoading(false)
+        return
+      }
       const res = await fetch(`/api/matches/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, description: desc || null }),
       })
       const data = await res.json()
       if (!res.ok) { setError(data.error || '수정에 실패했습니다.'); return }
@@ -190,12 +196,13 @@ export default function MatchEditPage({ params }: { params: Promise<{ id: string
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">설명 (선택)</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">설명 (선택, 입력 시 최소 10자)</label>
             <textarea
               rows={4}
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
-              placeholder="매치에 대한 상세 설명을 입력하세요"
+              placeholder="매치에 대한 상세 설명을 입력하세요 (최소 10자)"
+              minLength={10}
               maxLength={500}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#800020] text-sm resize-none"
             />
