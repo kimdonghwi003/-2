@@ -102,6 +102,15 @@ export default function MatchDetailPage({ params }: { params: Promise<{ id: stri
     if (res.ok) fetchApplicants()
   }
 
+  async function handleReject(applicationId: string) {
+    const res = await fetch(`/api/matches/${id}/reject`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ application_id: applicationId }),
+    })
+    if (res.ok) fetchApplicants()
+  }
+
   async function handleClose() {
     await fetch(`/api/matches/${id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: '매치확정' }) })
     fetchMatch()
@@ -118,6 +127,14 @@ export default function MatchDetailPage({ params }: { params: Promise<{ id: stri
       <div className="flex items-center gap-3 mb-6">
         <Link href="/match" className="text-gray-400 hover:text-[#800020]">←</Link>
         <h1 className="text-2xl font-bold text-[#800020]">매치 상세</h1>
+        {isHost && (
+          <Link
+            href={`/match/${id}/edit`}
+            className="ml-auto px-3 py-1.5 border border-[#800020] text-[#800020] rounded-lg text-sm font-medium hover:bg-[#800020] hover:text-white transition-colors"
+          >
+            수정
+          </Link>
+        )}
       </div>
 
       <div className="bg-white rounded-xl border border-[#f4aaba] p-6 mb-6">
@@ -193,24 +210,39 @@ export default function MatchDetailPage({ params }: { params: Promise<{ id: stri
           <h3 className="font-bold text-gray-900 mb-4">신청자 목록 ({applicants.length}명)</h3>
           <div className="space-y-3">
             {applicants.map((app) => (
-              <div key={app.id} className="flex items-center justify-between p-3 bg-[#fdf2f4] rounded-lg">
-                <div className="flex items-center gap-2">
-                  <span className="font-medium text-sm">{app.applicant_nickname}</span>
-                  <MannerBadge score={app.applicant_manner_score} />
-                </div>
-                <div className="flex items-center gap-2">
-                  {app.status === 'pending' ? (
-                    <button
-                      onClick={() => handleAccept(app.id)}
-                      className="px-3 py-1 bg-[#800020] text-white rounded text-sm font-medium hover:bg-[#5c1a24] transition-colors"
+              <div key={app.id} className="p-3 bg-[#fdf2f4] rounded-lg">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Link
+                      href={`/profile/${app.applicant_id}`}
+                      className="font-medium text-sm hover:text-[#800020] hover:underline"
                     >
-                      수락
-                    </button>
-                  ) : (
-                    <span className={`px-2 py-1 rounded text-xs font-medium ${app.status === 'accepted' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
-                      {app.status === 'accepted' ? '수락됨' : '거절됨'}
-                    </span>
-                  )}
+                      {app.applicant_nickname}
+                    </Link>
+                    <MannerBadge score={app.applicant_manner_score} />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {app.status === 'pending' ? (
+                      <>
+                        <button
+                          onClick={() => handleAccept(app.id)}
+                          className="px-3 py-1 bg-[#800020] text-white rounded text-sm font-medium hover:bg-[#5c1a24] transition-colors"
+                        >
+                          수락
+                        </button>
+                        <button
+                          onClick={() => handleReject(app.id)}
+                          className="px-3 py-1 border border-gray-400 text-gray-600 rounded text-sm font-medium hover:bg-gray-100 transition-colors"
+                        >
+                          거절
+                        </button>
+                      </>
+                    ) : (
+                      <span className={`px-2 py-1 rounded text-xs font-medium ${app.status === 'accepted' ? 'bg-green-100 text-green-700' : 'bg-red-50 text-red-500'}`}>
+                        {app.status === 'accepted' ? '수락됨' : '거절됨'}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}
