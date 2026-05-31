@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
     location,
     match_datetime: new Date(match_datetime).toISOString(),
     max_players: max_players ?? 10,
-    description: description ?? null,
+    description: description || null,
   }).select().single()
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })

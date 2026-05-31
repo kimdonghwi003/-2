@@ -5,11 +5,11 @@ import { usePathname, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
 const navItems = [
-  { href: '/match', label: '스포츠 매칭' },
-  { href: '/contest', label: '공모전' },
-  { href: '/contest/matches', label: '팀원 모집' },
-  { href: '/messages', label: '메시지' },
-  { href: '/notifications', label: '알림' },
+  { href: '/match', label: '스포츠 매칭', exact: false },
+  { href: '/contest', label: '공모전', exact: true },
+  { href: '/contest/matches', label: '팀원 모집', exact: false },
+  { href: '/messages', label: '메시지', exact: false },
+  { href: '/notifications', label: '알림', exact: false },
 ]
 
 export default function Navbar() {
@@ -35,7 +35,7 @@ export default function Navbar() {
               key={item.href}
               href={item.href}
               className={`px-3 py-1.5 rounded text-sm font-medium transition-colors ${
-                pathname.startsWith(item.href)
+                (item.exact ? pathname === item.href : pathname.startsWith(item.href))
                   ? 'bg-[#5c1a24] text-white'
                   : 'text-white/80 hover:bg-[#5c1a24] hover:text-white'
               }`}

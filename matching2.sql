@@ -1203,6 +1203,7 @@ SELECT
     ct.contest_id,
     ct.leader_id,
     u.nickname              AS leader_nickname,
+    u.manner_score          AS leader_manner_score,
     ct.team_name,
     ct.description,
     ct.required_roles,
@@ -1216,7 +1217,7 @@ SELECT
 FROM public.contest_teams ct
 JOIN public.users u ON u.id = ct.leader_id
 LEFT JOIN public.contest_team_applications cta ON cta.team_id = ct.id
-GROUP BY ct.id, u.nickname;
+GROUP BY ct.id, u.nickname, u.manner_score;
 
 -- =============================================================================
 -- 9. 헬퍼 함수 (API Route에서 활용)

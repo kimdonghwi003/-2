@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     contest_id,
     leader_id: user.id,
     team_name,
-    description: description ?? null,
+    description: description || null,
     max_size: max_size ?? 4,
     required_roles: required_roles ?? [],
   }).select().single()

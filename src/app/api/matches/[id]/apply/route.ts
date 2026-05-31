@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -28,7 +29,8 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
-  await supabase.from('notifications').insert({
+  const admin = createAdminClient()
+  await admin.from('notifications').insert({
     user_id: match.author_id,
     type: 'match_apply',
     message: '회원이 매치에 신청했습니다.',

@@ -6,7 +6,15 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 
-type Notif = { id: string; type: string; title: string; body: string; link: string | null; is_read: boolean; created_at: string }
+type Notif = { id: string; type: string; message: string; is_read: boolean; related_id: string | null; created_at: string }
+
+function notifLink(type: string, related_id: string | null): string | null {
+  if (!related_id) return null
+  if (type === 'match_apply' || type === 'match_accept' || type === 'match_reject' || type === 'match_cancel') return `/match/${related_id}`
+  if (type === 'new_message') return `/messages`
+  if (type === 'contest_apply' || type === 'contest_accept' || type === 'contest_reject') return `/contest/matches/${related_id}`
+  return null
+}
 
 export default function NotificationsPage() {
   const supabase = createClient()
@@ -57,24 +65,24 @@ export default function NotificationsPage() {
         <div className="text-center py-12 text-gray-400">알림이 없습니다.</div>
       ) : (
         <div className="space-y-2">
-          {notifs.map((n) => (
-            <div
-              key={n.id}
-              className={`rounded-xl border p-4 cursor-pointer transition-all ${n.is_read ? 'bg-white border-gray-100' : 'bg-[#fdf2f4] border-[#f4aaba]'}`}
-              onClick={() => { markRead(n.id); if (n.link) window.location.href = n.link }}
-            >
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="font-semibold text-sm text-gray-900">{n.title}</p>
-                  <p className="text-sm text-gray-600 mt-0.5">{n.body}</p>
+          {notifs.map((n) => {
+            const link = notifLink(n.type, n.related_id)
+            return (
+              <div
+                key={n.id}
+                className={`rounded-xl border p-4 cursor-pointer transition-all ${n.is_read ? 'bg-white border-gray-100' : 'bg-[#fdf2f4] border-[#f4aaba]'}`}
+                onClick={() => { markRead(n.id); if (link) window.location.href = link }}
+              >
+                <div className="flex items-start justify-between">
+                  <p className="text-sm text-gray-800">{n.message}</p>
+                  {!n.is_read && <div className="w-2 h-2 rounded-full bg-[#800020] mt-1 flex-shrink-0 ml-2" />}
                 </div>
-                {!n.is_read && <div className="w-2 h-2 rounded-full bg-[#800020] mt-1 flex-shrink-0" />}
+                <p className="text-xs text-gray-400 mt-2">
+                  {new Date(n.created_at).toLocaleString('ko-KR', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                </p>
               </div>
-              <p className="text-xs text-gray-400 mt-2">
-                {new Date(n.created_at).toLocaleString('ko-KR', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
-              </p>
-            </div>
-          ))}
+            )
+          })}
         </div>
       )}
     </div>
