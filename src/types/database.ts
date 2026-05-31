@@ -8,11 +8,12 @@ export interface Database {
           id: string
           email: string
           nickname: string
-          profile_image: string | null
+          student_id: string
+          full_name: string
+          department: string
+          avatar_url: string | null
           manner_score: number
-          department: string | null
-          student_id: string | null
-          bio: string | null
+          role: string
           is_active: boolean
           created_at: string
           updated_at: string
@@ -21,11 +22,12 @@ export interface Database {
           id: string
           email: string
           nickname: string
-          profile_image?: string | null
+          student_id?: string
+          full_name?: string
+          department?: string
+          avatar_url?: string | null
           manner_score?: number
-          department?: string | null
-          student_id?: string | null
-          bio?: string | null
+          role?: string
           is_active?: boolean
           created_at?: string
           updated_at?: string
@@ -34,11 +36,12 @@ export interface Database {
           id?: string
           email?: string
           nickname?: string
-          profile_image?: string | null
+          student_id?: string
+          full_name?: string
+          department?: string
+          avatar_url?: string | null
           manner_score?: number
-          department?: string | null
-          student_id?: string | null
-          bio?: string | null
+          role?: string
           is_active?: boolean
           created_at?: string
           updated_at?: string
@@ -50,11 +53,14 @@ export interface Database {
           id: string
           user_id: string
           sport: string
-          level: string
+          skill_level: string
           position: string | null
-          career: string | null
-          available_days: string[]
-          available_times: string[]
+          gender: string | null
+          age: number | null
+          career_years: number
+          is_pro: boolean
+          intro: string | null
+          is_visible: boolean
           created_at: string
           updated_at: string
         }
@@ -62,11 +68,14 @@ export interface Database {
           id?: string
           user_id: string
           sport: string
-          level: string
+          skill_level: string
           position?: string | null
-          career?: string | null
-          available_days?: string[]
-          available_times?: string[]
+          gender?: string | null
+          age?: number | null
+          career_years?: number
+          is_pro?: boolean
+          intro?: string | null
+          is_visible?: boolean
           created_at?: string
           updated_at?: string
         }
@@ -74,11 +83,14 @@ export interface Database {
           id?: string
           user_id?: string
           sport?: string
-          level?: string
+          skill_level?: string
           position?: string | null
-          career?: string | null
-          available_days?: string[]
-          available_times?: string[]
+          gender?: string | null
+          age?: number | null
+          career_years?: number
+          is_pro?: boolean
+          intro?: string | null
+          is_visible?: boolean
           created_at?: string
           updated_at?: string
         }
@@ -88,30 +100,42 @@ export interface Database {
         Row: {
           id: string
           user_id: string
-          skills: string[]
-          portfolio_url: string | null
-          awards: string | null
-          preferred_roles: string[]
+          department: string
+          gender: string | null
+          age: number | null
+          contest_count: number
+          certificates: string[]
+          fields: string[]
+          intro: string | null
+          is_visible: boolean
           created_at: string
           updated_at: string
         }
         Insert: {
           id?: string
           user_id: string
-          skills?: string[]
-          portfolio_url?: string | null
-          awards?: string | null
-          preferred_roles?: string[]
+          department?: string
+          gender?: string | null
+          age?: number | null
+          contest_count?: number
+          certificates?: string[]
+          fields?: string[]
+          intro?: string | null
+          is_visible?: boolean
           created_at?: string
           updated_at?: string
         }
         Update: {
           id?: string
           user_id?: string
-          skills?: string[]
-          portfolio_url?: string | null
-          awards?: string | null
-          preferred_roles?: string[]
+          department?: string
+          gender?: string | null
+          age?: number | null
+          contest_count?: number
+          certificates?: string[]
+          fields?: string[]
+          intro?: string | null
+          is_visible?: boolean
           created_at?: string
           updated_at?: string
         }
@@ -120,55 +144,46 @@ export interface Database {
       matches: {
         Row: {
           id: string
-          host_id: string
-          title: string
+          author_id: string
+          team_name: string
           sport: string
-          match_type: string
-          level: string
+          match_size: string
           location: string
-          scheduled_at: string
-          max_players: number
-          reserve_slots: number
-          current_players: number
           description: string | null
+          required_level: string
           status: string
-          expires_at: string
+          match_datetime: string
+          max_players: number
           created_at: string
           updated_at: string
         }
         Insert: {
           id?: string
-          host_id: string
-          title: string
+          author_id: string
+          team_name: string
           sport: string
-          match_type?: string
-          level?: string
+          match_size: string
           location: string
-          scheduled_at: string
-          max_players?: number
-          reserve_slots?: number
-          current_players?: number
           description?: string | null
+          required_level: string
           status?: string
-          expires_at: string
+          match_datetime: string
+          max_players?: number
           created_at?: string
           updated_at?: string
         }
         Update: {
           id?: string
-          host_id?: string
-          title?: string
+          author_id?: string
+          team_name?: string
           sport?: string
-          match_type?: string
-          level?: string
+          match_size?: string
           location?: string
-          scheduled_at?: string
-          max_players?: number
-          reserve_slots?: number
-          current_players?: number
           description?: string | null
+          required_level?: string
           status?: string
-          expires_at?: string
+          match_datetime?: string
+          max_players?: number
           created_at?: string
           updated_at?: string
         }
@@ -179,8 +194,6 @@ export interface Database {
           id: string
           match_id: string
           applicant_id: string
-          message: string | null
-          slot_type: string
           status: string
           created_at: string
           updated_at: string
@@ -189,8 +202,6 @@ export interface Database {
           id?: string
           match_id: string
           applicant_id: string
-          message?: string | null
-          slot_type?: string
           status?: string
           created_at?: string
           updated_at?: string
@@ -199,8 +210,6 @@ export interface Database {
           id?: string
           match_id?: string
           applicant_id?: string
-          message?: string | null
-          slot_type?: string
           status?: string
           created_at?: string
           updated_at?: string
@@ -210,23 +219,23 @@ export interface Database {
       message_rooms: {
         Row: {
           id: string
-          match_id: string
-          user1_id: string
-          user2_id: string
+          application_id: string
+          participant_1: string
+          participant_2: string
           created_at: string
         }
         Insert: {
           id?: string
-          match_id: string
-          user1_id: string
-          user2_id: string
+          application_id: string
+          participant_1: string
+          participant_2: string
           created_at?: string
         }
         Update: {
           id?: string
-          match_id?: string
-          user1_id?: string
-          user2_id?: string
+          application_id?: string
+          participant_1?: string
+          participant_2?: string
           created_at?: string
         }
         Relationships: []
@@ -237,6 +246,7 @@ export interface Database {
           room_id: string
           sender_id: string
           content: string
+          is_read: boolean
           created_at: string
         }
         Insert: {
@@ -244,6 +254,7 @@ export interface Database {
           room_id: string
           sender_id: string
           content: string
+          is_read?: boolean
           created_at?: string
         }
         Update: {
@@ -251,6 +262,7 @@ export interface Database {
           room_id?: string
           sender_id?: string
           content?: string
+          is_read?: boolean
           created_at?: string
         }
         Relationships: []
@@ -262,7 +274,6 @@ export interface Database {
           reviewer_id: string
           reviewee_id: string
           rating: number
-          comment: string | null
           created_at: string
         }
         Insert: {
@@ -271,7 +282,6 @@ export interface Database {
           reviewer_id: string
           reviewee_id: string
           rating: number
-          comment?: string | null
           created_at?: string
         }
         Update: {
@@ -280,7 +290,6 @@ export interface Database {
           reviewer_id?: string
           reviewee_id?: string
           rating?: number
-          comment?: string | null
           created_at?: string
         }
         Relationships: []
@@ -290,30 +299,27 @@ export interface Database {
           id: string
           user_id: string
           type: string
-          title: string
-          body: string
-          link: string | null
+          message: string
           is_read: boolean
+          related_id: string | null
           created_at: string
         }
         Insert: {
           id?: string
           user_id: string
           type: string
-          title: string
-          body: string
-          link?: string | null
+          message: string
           is_read?: boolean
+          related_id?: string | null
           created_at?: string
         }
         Update: {
           id?: string
           user_id?: string
           type?: string
-          title?: string
-          body?: string
-          link?: string | null
+          message?: string
           is_read?: boolean
+          related_id?: string | null
           created_at?: string
         }
         Relationships: []
@@ -351,42 +357,42 @@ export interface Database {
       contest_teams: {
         Row: {
           id: string
-          contest_id: string
+          contest_id: number
           leader_id: string
           team_name: string
           description: string | null
-          max_members: number
-          current_members: number
-          required_skills: string[]
+          required_roles: string[]
+          max_size: number
+          current_count: number
+          is_recruiting: boolean
           status: string
           created_at: string
-          updated_at: string
         }
         Insert: {
           id?: string
-          contest_id: string
+          contest_id: number
           leader_id: string
           team_name: string
           description?: string | null
-          max_members?: number
-          current_members?: number
-          required_skills?: string[]
+          required_roles?: string[]
+          max_size?: number
+          current_count?: number
+          is_recruiting?: boolean
           status?: string
           created_at?: string
-          updated_at?: string
         }
         Update: {
           id?: string
-          contest_id?: string
+          contest_id?: number
           leader_id?: string
           team_name?: string
           description?: string | null
-          max_members?: number
-          current_members?: number
-          required_skills?: string[]
+          required_roles?: string[]
+          max_size?: number
+          current_count?: number
+          is_recruiting?: boolean
           status?: string
           created_at?: string
-          updated_at?: string
         }
         Relationships: []
       }
@@ -396,7 +402,6 @@ export interface Database {
           team_id: string
           applicant_id: string
           message: string | null
-          role: string | null
           status: string
           created_at: string
           updated_at: string
@@ -406,7 +411,6 @@ export interface Database {
           team_id: string
           applicant_id: string
           message?: string | null
-          role?: string | null
           status?: string
           created_at?: string
           updated_at?: string
@@ -416,7 +420,6 @@ export interface Database {
           team_id?: string
           applicant_id?: string
           message?: string | null
-          role?: string | null
           status?: string
           created_at?: string
           updated_at?: string
@@ -427,16 +430,19 @@ export interface Database {
         Row: {
           id: string
           team_id: string
+          name: string
           created_at: string
         }
         Insert: {
           id?: string
           team_id: string
+          name?: string
           created_at?: string
         }
         Update: {
           id?: string
           team_id?: string
+          name?: string
           created_at?: string
         }
         Relationships: []
@@ -489,33 +495,30 @@ export interface Database {
       sports_reservations: {
         Row: {
           id: string
-          facility_name: string
-          facility_type: string
-          location: string
-          available_date: string
-          available_slots: Json
-          source_url: string | null
-          crawled_at: string
+          facility: string
+          reservation_date: string
+          start_time: string
+          end_time: string
+          status: string
+          last_crawled_at: string
         }
         Insert: {
           id?: string
-          facility_name: string
-          facility_type: string
-          location: string
-          available_date: string
-          available_slots?: Json
-          source_url?: string | null
-          crawled_at?: string
+          facility: string
+          reservation_date: string
+          start_time: string
+          end_time: string
+          status?: string
+          last_crawled_at?: string
         }
         Update: {
           id?: string
-          facility_name?: string
-          facility_type?: string
-          location?: string
-          available_date?: string
-          available_slots?: Json
-          source_url?: string | null
-          crawled_at?: string
+          facility?: string
+          reservation_date?: string
+          start_time?: string
+          end_time?: string
+          status?: string
+          last_crawled_at?: string
         }
         Relationships: []
       }
@@ -523,43 +526,43 @@ export interface Database {
         Row: {
           id: string
           title: string
-          organizer: string
-          category: string
-          region: string
+          url: string
+          category: string | null
+          organizer: string | null
           deadline: string
-          prize: string | null
+          source: string | null
           description: string | null
-          url: string | null
-          ai_summary: string | null
-          expires_at: string
+          thumbnail_url: string | null
+          is_active: boolean
+          last_crawled_at: string
           created_at: string
         }
         Insert: {
           id?: string
           title: string
-          organizer: string
-          category: string
-          region: string
+          url: string
+          category?: string | null
+          organizer?: string | null
           deadline: string
-          prize?: string | null
+          source?: string | null
           description?: string | null
-          url?: string | null
-          ai_summary?: string | null
-          expires_at: string
+          thumbnail_url?: string | null
+          is_active?: boolean
+          last_crawled_at?: string
           created_at?: string
         }
         Update: {
           id?: string
           title?: string
-          organizer?: string
-          category?: string
-          region?: string
+          url?: string
+          category?: string | null
+          organizer?: string | null
           deadline?: string
-          prize?: string | null
+          source?: string | null
           description?: string | null
-          url?: string | null
-          ai_summary?: string | null
-          expires_at?: string
+          thumbnail_url?: string | null
+          is_active?: boolean
+          last_crawled_at?: string
           created_at?: string
         }
         Relationships: []
@@ -569,59 +572,60 @@ export interface Database {
       v_match_list: {
         Row: {
           id: string
-          host_id: string
-          title: string
+          author_id: string
+          author_nickname: string
+          author_manner_score: number
+          team_name: string
           sport: string
-          match_type: string
-          level: string
+          match_size: string
           location: string
-          scheduled_at: string
-          max_players: number
-          reserve_slots: number
-          current_players: number
+          description: string | null
+          required_level: string
           status: string
-          expires_at: string
+          match_datetime: string
+          max_players: number
           created_at: string
-          host_nickname: string
-          host_manner_score: number
-          host_profile_image: string | null
+          pending_count: number
+          accepted_count: number
+          display_count: number
         }
-        Insert: { [_ in never]: never }
-        Update: { [_ in never]: never }
         Relationships: []
       }
       v_applicant_detail: {
         Row: {
-          id: string
+          application_id: string
           match_id: string
-          applicant_id: string
-          message: string | null
-          slot_type: string
           status: string
-          applicant_nickname: string
-          applicant_manner_score: number
+          applied_at: string
+          applicant_id: string
+          nickname: string
+          manner_score: number
+          sport: string | null
+          skill_level: string | null
+          position: string | null
+          career_years: number | null
+          is_pro: boolean | null
+          is_skill_unregistered: boolean
         }
-        Insert: { [_ in never]: never }
-        Update: { [_ in never]: never }
         Relationships: []
       }
       v_contest_team_list: {
         Row: {
           id: string
-          contest_id: string
+          contest_id: number
           leader_id: string
+          leader_nickname: string
           team_name: string
           description: string | null
-          max_members: number
-          current_members: number
-          required_skills: string[]
+          required_roles: string[]
+          max_size: number
+          current_count: number
+          remaining_slots: number
+          is_recruiting: boolean
           status: string
           created_at: string
-          leader_nickname: string
-          leader_manner_score: number
+          pending_applications: number
         }
-        Insert: { [_ in never]: never }
-        Update: { [_ in never]: never }
         Relationships: []
       }
     }
@@ -631,29 +635,15 @@ export interface Database {
         Returns: boolean
       }
       fn_cleanup_expired_matches: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
+        Args: Record<string, never>
+        Returns: number
       }
       fn_cleanup_expired_external_contests: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
+        Args: Record<string, never>
+        Returns: number
       }
     }
     Enums: {}
     CompositeTypes: {}
   }
 }
-
-export type User = Database['public']['Tables']['users']['Row']
-export type Match = Database['public']['Tables']['matches']['Row']
-export type MatchApplication = Database['public']['Tables']['match_applications']['Row']
-export type ContestTeam = Database['public']['Tables']['contest_teams']['Row']
-export type ContestTeamApplication = Database['public']['Tables']['contest_team_applications']['Row']
-export type Message = Database['public']['Tables']['messages']['Row']
-export type MessageRoom = Database['public']['Tables']['message_rooms']['Row']
-export type ContestChatMessage = Database['public']['Tables']['contest_chat_messages']['Row']
-export type Review = Database['public']['Tables']['reviews']['Row']
-export type Notification = Database['public']['Tables']['notifications']['Row']
-export type Report = Database['public']['Tables']['reports']['Row']
-export type VMatchList = Database['public']['Views']['v_match_list']['Row']
-export type VContestTeamList = Database['public']['Views']['v_contest_team_list']['Row']
