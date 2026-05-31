@@ -8,9 +8,9 @@ export async function GET(request: NextRequest) {
   const level = searchParams.get('level')
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let query = (supabase as any).from('v_match_list').select('*').eq('status', 'open').order('created_at', { ascending: false })
+  let query = (supabase as any).from('v_match_list').select('*').eq('status', '모집중').order('created_at', { ascending: false })
   if (sport) query = query.eq('sport', sport)
-  if (level) query = query.eq('level', level)
+  if (level) query = query.eq('required_level', level)
 
   const { data, error } = await query
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
@@ -23,26 +23,22 @@ export async function POST(request: NextRequest) {
   if (!user) return NextResponse.json({ error: '로그인이 필요합니다.' }, { status: 401 })
 
   const body = await request.json()
-  const { title, sport, match_type, level, location, scheduled_at, max_players, reserve_slots, description } = body
+  const { team_name, sport, match_size, required_level, location, match_datetime, max_players, description } = body
 
-  if (!title || !sport || !location || !scheduled_at) {
+  if (!team_name || !sport || !match_size || !required_level || !location || !match_datetime) {
     return NextResponse.json({ error: '필수 항목을 모두 입력해주세요.' }, { status: 400 })
   }
 
-  const expires_at = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
-
   const { data, error } = await supabase.from('matches').insert({
-    host_id: user.id,
-    title,
+    author_id: user.id,
+    team_name,
     sport,
-    match_type: match_type ?? 'recruit',
-    level: level ?? 'any',
+    match_size,
+    required_level,
     location,
-    scheduled_at: new Date(scheduled_at).toISOString(),
-    max_players: max_players ?? 6,
-    reserve_slots: reserve_slots ?? 2,
+    match_datetime: new Date(match_datetime).toISOString(),
+    max_players: max_players ?? 10,
     description: description ?? null,
-    expires_at,
   }).select().single()
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })

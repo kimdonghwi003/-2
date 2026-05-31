@@ -20,10 +20,9 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
   await supabase.from('notifications').insert({
     user_id: app.applicant_id,
-    type: 'team_accept',
-    title: '팀 신청 수락',
-    body: '팀 참여 신청이 수락되었습니다.',
-    link: `/contest/matches/${id}`,
+    type: 'contest_accept',
+    message: '팀 참여 신청이 수락되었습니다.',
+    related_id: id,
   })
 
   return NextResponse.json({ success: true })

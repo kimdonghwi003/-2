@@ -1,5 +1,5 @@
 export interface Contest {
-  id: string
+  id: number
   title: string
   organizer: string
   category: string
@@ -12,7 +12,7 @@ export interface Contest {
 
 export const STATIC_CONTESTS: Contest[] = [
   {
-    id: 'c001',
+    id: 1,
     title: '2026 충북대 창업 아이디어 공모전',
     organizer: '충북대학교 창업지원단',
     category: '창업/비즈니스',
@@ -23,7 +23,7 @@ export const STATIC_CONTESTS: Contest[] = [
     url: 'https://startup.chungbuk.ac.kr',
   },
   {
-    id: 'c002',
+    id: 2,
     title: '2026 대전·충청 SW개발 해커톤',
     organizer: '대전정보문화산업진흥원',
     category: 'IT/소프트웨어',
@@ -34,7 +34,7 @@ export const STATIC_CONTESTS: Contest[] = [
     url: 'https://dicia.or.kr',
   },
   {
-    id: 'c003',
+    id: 3,
     title: '세종시 스마트시티 아이디어 공모전',
     organizer: '세종특별자치시',
     category: '도시/환경',
@@ -45,7 +45,7 @@ export const STATIC_CONTESTS: Contest[] = [
     url: 'https://www.sejong.go.kr',
   },
   {
-    id: 'c004',
+    id: 4,
     title: '충청남도 환경보호 UCC 공모전',
     organizer: '충청남도 환경부',
     category: '환경/에너지',
@@ -56,7 +56,7 @@ export const STATIC_CONTESTS: Contest[] = [
     url: 'https://www.chungnam.go.kr',
   },
   {
-    id: 'c005',
+    id: 5,
     title: '전국 대학생 AI/ML 논문 경진대회',
     organizer: '한국인공지능학회',
     category: 'AI/데이터',
@@ -67,7 +67,7 @@ export const STATIC_CONTESTS: Contest[] = [
     url: 'https://www.ksai.or.kr',
   },
   {
-    id: 'c006',
+    id: 6,
     title: '충북 청년 디자인 공모전',
     organizer: '충청북도 청년정책과',
     category: '디자인/예술',
@@ -78,7 +78,7 @@ export const STATIC_CONTESTS: Contest[] = [
     url: 'https://www.chungbuk.go.kr',
   },
   {
-    id: 'c007',
+    id: 7,
     title: '대전 스타트업 피칭 대회',
     organizer: '대전창조경제혁신센터',
     category: '창업/비즈니스',
@@ -89,7 +89,7 @@ export const STATIC_CONTESTS: Contest[] = [
     url: 'https://ccei.creativekorea.or.kr/daejeon',
   },
   {
-    id: 'c008',
+    id: 8,
     title: '전국 대학생 마케팅 전략 공모전',
     organizer: '한국마케팅협회',
     category: '마케팅/광고',
@@ -100,7 +100,7 @@ export const STATIC_CONTESTS: Contest[] = [
     url: 'https://www.kma.re.kr',
   },
   {
-    id: 'c009',
+    id: 9,
     title: '충남 관광 콘텐츠 공모전',
     organizer: '충청남도 관광과',
     category: '관광/문화',
@@ -111,7 +111,7 @@ export const STATIC_CONTESTS: Contest[] = [
     url: 'https://www.chungnam.go.kr/tour',
   },
   {
-    id: 'c010',
+    id: 10,
     title: '세종 청년 정책 제안 공모전',
     organizer: '세종시 청년지원센터',
     category: '사회/정책',
@@ -122,7 +122,7 @@ export const STATIC_CONTESTS: Contest[] = [
     url: 'https://youth.sejong.go.kr',
   },
   {
-    id: 'c011',
+    id: 11,
     title: '전국 대학생 금융 아이디어 공모전',
     organizer: '금융감독원',
     category: '금융/경제',
@@ -133,7 +133,7 @@ export const STATIC_CONTESTS: Contest[] = [
     url: 'https://www.fss.or.kr',
   },
   {
-    id: 'c012',
+    id: 12,
     title: '충북대 캡스톤 디자인 경진대회',
     organizer: '충북대학교 공과대학',
     category: 'IT/소프트웨어',
@@ -144,7 +144,7 @@ export const STATIC_CONTESTS: Contest[] = [
     url: 'https://eng.chungbuk.ac.kr',
   },
   {
-    id: 'c013',
+    id: 13,
     title: '대전 스마트 팩토리 공모전',
     organizer: '대전광역시 산업통상자원부',
     category: '제조/기술',
@@ -155,7 +155,7 @@ export const STATIC_CONTESTS: Contest[] = [
     url: 'https://www.daejeon.go.kr',
   },
   {
-    id: 'c014',
+    id: 14,
     title: '전국 대학생 사진/영상 공모전',
     organizer: '한국문화예술교육진흥원',
     category: '예술/미디어',
@@ -166,7 +166,7 @@ export const STATIC_CONTESTS: Contest[] = [
     url: 'https://www.arte.or.kr',
   },
   {
-    id: 'c015',
+    id: 15,
     title: '충남 농업 혁신 아이디어 공모전',
     organizer: '충청남도 농업기술원',
     category: '농업/식품',
@@ -177,7 +177,7 @@ export const STATIC_CONTESTS: Contest[] = [
     url: 'https://www.cnat.go.kr',
   },
   {
-    id: 'c016',
+    id: 16,
     title: '전국 대학생 사회적 기업 공모전',
     organizer: '한국사회적기업진흥원',
     category: '사회/정책',
@@ -188,7 +188,7 @@ export const STATIC_CONTESTS: Contest[] = [
     url: 'https://www.socialenterprise.or.kr',
   },
   {
-    id: 'c017',
+    id: 17,
     title: '세종 스마트 교육 공모전',
     organizer: '세종특별자치시교육청',
     category: '교육/학술',

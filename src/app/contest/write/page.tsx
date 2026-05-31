@@ -16,8 +16,8 @@ function ContestWriteForm() {
     contest_id: preselectedId,
     team_name: '',
     description: '',
-    max_members: 4,
-    required_skills: '',
+    max_size: 4,
+    required_roles: '',
   })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -26,11 +26,11 @@ function ContestWriteForm() {
     e.preventDefault()
     setError('')
     setLoading(true)
-    const skills = form.required_skills.split(',').map((s) => s.trim()).filter(Boolean)
+    const roles = form.required_roles.split(',').map((s) => s.trim()).filter(Boolean)
     const res = await fetch('/api/contest/teams', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...form, required_skills: skills }),
+      body: JSON.stringify({ ...form, contest_id: Number(form.contest_id), required_roles: roles }),
     })
     const data = await res.json()
     if (!res.ok) { setError(data.error || '팀 생성에 실패했습니다.'); setLoading(false); return }
@@ -68,6 +68,7 @@ function ContestWriteForm() {
               value={form.team_name}
               onChange={(e) => setForm({ ...form, team_name: e.target.value })}
               placeholder="팀 이름을 입력하세요"
+              maxLength={50}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#800020] text-sm"
             />
           </div>
@@ -77,7 +78,8 @@ function ContestWriteForm() {
               rows={4}
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
-              placeholder="팀에 대한 소개 및 원하는 팀원 유형을 작성해주세요"
+              placeholder="팀에 대한 소개 및 원하는 팀원 유형을 작성해주세요 (최소 10자)"
+              minLength={10}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#800020] text-sm resize-none"
             />
           </div>
@@ -85,19 +87,19 @@ function ContestWriteForm() {
             <label className="block text-sm font-medium text-gray-700 mb-1">최대 팀원 수</label>
             <input
               type="number"
-              min={2}
-              max={10}
-              value={form.max_members}
-              onChange={(e) => setForm({ ...form, max_members: parseInt(e.target.value) })}
+              min={1}
+              max={5}
+              value={form.max_size}
+              onChange={(e) => setForm({ ...form, max_size: parseInt(e.target.value) })}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#800020] text-sm"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">필요 스킬 (쉼표로 구분)</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">필요 역할 (쉼표로 구분)</label>
             <input
-              value={form.required_skills}
-              onChange={(e) => setForm({ ...form, required_skills: e.target.value })}
-              placeholder="예: 디자인, 개발, 기획"
+              value={form.required_roles}
+              onChange={(e) => setForm({ ...form, required_roles: e.target.value })}
+              placeholder="예: 디자이너, 개발자, 기획자"
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#800020] text-sm"
             />
           </div>

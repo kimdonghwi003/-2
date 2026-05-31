@@ -8,7 +8,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   if (!user) return NextResponse.json({ error: '로그인이 필요합니다.' }, { status: 401 })
 
   const { data: room } = await supabase.from('message_rooms').select('*').eq('id', roomId).single()
-  if (!room || (room.user1_id !== user.id && room.user2_id !== user.id)) {
+  if (!room || (room.participant_1 !== user.id && room.participant_2 !== user.id)) {
     return NextResponse.json({ error: '권한이 없습니다.' }, { status: 403 })
   }
 
@@ -32,7 +32,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   if (!content?.trim()) return NextResponse.json({ error: '메시지를 입력해주세요.' }, { status: 400 })
 
   const { data: room } = await supabase.from('message_rooms').select('*').eq('id', roomId).single()
-  if (!room || (room.user1_id !== user.id && room.user2_id !== user.id)) {
+  if (!room || (room.participant_1 !== user.id && room.participant_2 !== user.id)) {
     return NextResponse.json({ error: '권한이 없습니다.' }, { status: 403 })
   }
 

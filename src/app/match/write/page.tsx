@@ -6,30 +6,37 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
-const SPORTS = ['풋살', '농구', '테니스', 'e스포츠', '배드민턴', '야구', '기타']
-const LEVELS = [
-  { value: 'any', label: '무관' },
-  { value: 'beginner', label: '입문' },
-  { value: 'intermediate', label: '중급' },
-  { value: 'advanced', label: '고급' },
-  { value: 'expert', label: '전문' },
-]
+const SPORTS = ['축구', '풋살', '농구', 'e스포츠'] as const
+type Sport = typeof SPORTS[number]
+
+const MATCH_SIZES: Record<Sport, string[]> = {
+  '축구':    ['5vs5', '11vs11'],
+  '풋살':    ['3vs3', '5vs5'],
+  '농구':    ['3vs3', '5vs5'],
+  'e스포츠': ['1vs1', '3vs3', '5vs5'],
+}
+
+const LEVELS = ['초급', '중급', '고수'] as const
 
 export default function MatchWritePage() {
   const router = useRouter()
   const [form, setForm] = useState({
-    title: '',
-    sport: '풋살',
-    match_type: 'recruit',
-    level: 'any',
+    team_name: '',
+    sport: '풋살' as Sport,
+    match_size: '3vs3',
+    required_level: '초급',
     location: '',
-    scheduled_at: '',
-    max_players: 6,
-    reserve_slots: 2,
+    match_datetime: '',
+    max_players: 10,
     description: '',
   })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+
+  function handleSportChange(sport: Sport) {
+    const sizes = MATCH_SIZES[sport]
+    setForm({ ...form, sport, match_size: sizes[0] })
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -67,12 +74,14 @@ export default function MatchWritePage() {
         )}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">제목</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">팀 이름</label>
             <input
               required
-              value={form.title}
-              onChange={(e) => setForm({ ...form, title: e.target.value })}
-              placeholder="매치 제목을 입력하세요"
+              value={form.team_name}
+              onChange={(e) => setForm({ ...form, team_name: e.target.value })}
+              placeholder="우리 팀 이름을 입력하세요"
+              minLength={2}
+              maxLength={20}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#800020] text-sm"
             />
           </div>
@@ -82,21 +91,20 @@ export default function MatchWritePage() {
               <label className="block text-sm font-medium text-gray-700 mb-1">종목</label>
               <select
                 value={form.sport}
-                onChange={(e) => setForm({ ...form, sport: e.target.value })}
+                onChange={(e) => handleSportChange(e.target.value as Sport)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#800020] text-sm bg-white"
               >
                 {SPORTS.map((s) => <option key={s} value={s}>{s}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">유형</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">경기 유형</label>
               <select
-                value={form.match_type}
-                onChange={(e) => setForm({ ...form, match_type: e.target.value })}
+                value={form.match_size}
+                onChange={(e) => setForm({ ...form, match_size: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#800020] text-sm bg-white"
               >
-                <option value="recruit">팀원 모집</option>
-                <option value="vs">대결 신청</option>
+                {MATCH_SIZES[form.sport].map((s) => <option key={s} value={s}>{s}</option>)}
               </select>
             </div>
           </div>
@@ -105,11 +113,11 @@ export default function MatchWritePage() {
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">수준</label>
               <select
-                value={form.level}
-                onChange={(e) => setForm({ ...form, level: e.target.value })}
+                value={form.required_level}
+                onChange={(e) => setForm({ ...form, required_level: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#800020] text-sm bg-white"
               >
-                {LEVELS.map((l) => <option key={l.value} value={l.value}>{l.label}</option>)}
+                {LEVELS.map((l) => <option key={l} value={l}>{l}</option>)}
               </select>
             </div>
             <div>
@@ -119,55 +127,45 @@ export default function MatchWritePage() {
                 value={form.location}
                 onChange={(e) => setForm({ ...form, location: e.target.value })}
                 placeholder="경기 장소"
+                maxLength={50}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#800020] text-sm"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">일시</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">경기 일시</label>
             <input
               type="datetime-local"
               required
-              value={form.scheduled_at}
-              onChange={(e) => setForm({ ...form, scheduled_at: e.target.value })}
+              value={form.match_datetime}
+              onChange={(e) => setForm({ ...form, match_datetime: e.target.value })}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#800020] text-sm"
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">주전 인원</label>
-              <input
-                type="number"
-                min={1}
-                max={50}
-                required
-                value={form.max_players}
-                onChange={(e) => setForm({ ...form, max_players: parseInt(e.target.value) })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#800020] text-sm"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">예비 인원</label>
-              <input
-                type="number"
-                min={0}
-                max={10}
-                value={form.reserve_slots}
-                onChange={(e) => setForm({ ...form, reserve_slots: parseInt(e.target.value) })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#800020] text-sm"
-              />
-            </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">모집 인원</label>
+            <input
+              type="number"
+              min={1}
+              max={50}
+              required
+              value={form.max_players}
+              onChange={(e) => setForm({ ...form, max_players: parseInt(e.target.value) })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#800020] text-sm"
+            />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">설명</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">설명 (선택)</label>
             <textarea
               rows={4}
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
-              placeholder="매치에 대한 상세 설명을 입력하세요"
+              placeholder="매치에 대한 상세 설명을 입력하세요 (최소 10자)"
+              minLength={10}
+              maxLength={500}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#800020] text-sm resize-none"
             />
           </div>

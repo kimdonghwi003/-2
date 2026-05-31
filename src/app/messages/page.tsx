@@ -1,50 +1,32 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 
-type MessageRoom = {
-  id: string
-  created_at: string
-  match_id: string
-  user1: { id: string; nickname: string } | null
-  user2: { id: string; nickname: string } | null
-}
-
-type ContestRoomMember = {
-  room_id: string
-  contest_chat_rooms: {
-    id: string
-    team_id: string
-    contest_teams: { team_name: string } | null
-  } | null
-}
+export const dynamic = 'force-dynamic'
 
 export default async function MessagesPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
-  const supabaseAny = supabase as unknown as { from: (table: string) => unknown }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const supabaseAny = supabase as any
 
-  const { data: rooms } = await (supabaseAny.from('message_rooms') as {
-    select: (q: string) => {
-      or: (q: string) => {
-        order: (col: string, opts: { ascending: boolean }) => Promise<{ data: MessageRoom[] | null }>
-      }
-    }
-  }).select(`
-    id, created_at, match_id,
-    user1:users!user1_id(id, nickname),
-    user2:users!user2_id(id, nickname)
-  `).or(`user1_id.eq.${user?.id},user2_id.eq.${user?.id}`)
-  .order('created_at', { ascending: false })
+  const { data: rooms } = await supabaseAny
+    .from('message_rooms')
+    .select(`
+      id, created_at,
+      p1:users!participant_1(id, nickname),
+      p2:users!participant_2(id, nickname)
+    `)
+    .or(`participant_1.eq.${user?.id},participant_2.eq.${user?.id}`)
+    .order('created_at', { ascending: false })
 
-  const { data: contestRooms } = await (supabaseAny.from('contest_chat_members') as {
-    select: (q: string) => {
-      eq: (col: string, val: string) => Promise<{ data: ContestRoomMember[] | null }>
-    }
-  }).select(`
-    room_id,
-    contest_chat_rooms!room_id(id, team_id, contest_teams!team_id(team_name))
-  `).eq('user_id', user?.id ?? '')
+  const { data: contestRooms } = await supabaseAny
+    .from('contest_chat_members')
+    .select(`
+      room_id,
+      contest_chat_rooms!room_id(id, team_id, contest_teams!team_id(team_name))
+    `)
+    .eq('user_id', user?.id ?? '')
 
   return (
     <div>
@@ -59,8 +41,10 @@ export default async function MessagesPage() {
             </div>
           ) : (
             <div className="space-y-2">
-              {rooms.map((room) => {
-                const other = room.user1?.id === user?.id ? room.user2 : room.user1
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+              {rooms.map((room: any) => {
+                const isP1 = room.p1?.id === user?.id
+                const other = isP1 ? room.p2 : room.p1
                 return (
                   <Link key={room.id} href={`/messages/${room.id}`}>
                     <div className="bg-white rounded-xl border border-[#f4aaba] p-4 hover:border-[#800020] hover:shadow-sm transition-all">
@@ -82,7 +66,8 @@ export default async function MessagesPage() {
             </div>
           ) : (
             <div className="space-y-2">
-              {contestRooms.map((cr) => {
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+              {contestRooms.map((cr: any) => {
                 const teamName = cr.contest_chat_rooms?.contest_teams?.team_name ?? '팀 채팅방'
                 return (
                   <Link key={cr.room_id} href={`/messages/contest/${cr.room_id}`}>

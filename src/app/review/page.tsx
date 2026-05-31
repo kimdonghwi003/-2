@@ -19,7 +19,7 @@ type Review = {
 type AcceptedMatch = {
   id: string
   match_id: string
-  match?: { title: string }
+  match?: { team_name: string }
   applicant_id: string
 }
 
@@ -45,7 +45,7 @@ export default function ReviewPage() {
 
     const { data: accepted } = await supabase
       .from('match_applications')
-      .select('id, match_id, applicant_id, matches!match_id(title)')
+      .select('id, match_id, applicant_id, matches!match_id(team_name)')
       .eq('status', 'accepted')
       .order('created_at', { ascending: false })
 
@@ -102,7 +102,7 @@ export default function ReviewPage() {
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#800020] text-sm bg-white">
                 <option value="">매치를 선택하세요</option>
                 {pendingMatches.map((m) => (
-                  <option key={m.id} value={m.match_id}>{(m.match as { title: string } | null)?.title ?? m.match_id}</option>
+                  <option key={m.id} value={m.match_id}>{(m.match as { team_name: string } | null)?.team_name ?? m.match_id}</option>
                 ))}
               </select>
             </div>

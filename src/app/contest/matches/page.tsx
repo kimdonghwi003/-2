@@ -10,12 +10,12 @@ import MannerBadge from '@/components/MannerBadge'
 
 type TeamRow = {
   id: string
-  contest_id: string
+  contest_id: number
   team_name: string
   description: string | null
-  max_members: number
-  current_members: number
-  required_skills: string[]
+  max_size: number
+  current_count: number
+  required_roles: string[]
   status: string
   leader_nickname: string
   leader_manner_score: number
@@ -36,17 +36,18 @@ export default function ContestMatchesPage() {
   }, [])
 
   async function fetchTeams() {
-    const { data } = await supabase
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data } = await (supabase as any)
       .from('v_contest_team_list')
       .select('*')
-      .eq('status', 'recruiting')
+      .eq('status', '모집중')
       .order('created_at', { ascending: false })
     setTeams((data as TeamRow[]) ?? [])
     setLoading(false)
   }
 
-  function getContestName(contestId: string) {
-    return STATIC_CONTESTS.find((c) => c.id === contestId)?.title ?? contestId
+  function getContestName(contestId: number) {
+    return STATIC_CONTESTS.find((c) => c.id === contestId)?.title ?? String(contestId)
   }
 
   return (
@@ -77,20 +78,20 @@ export default function ContestMatchesPage() {
               <h3 className="font-bold text-gray-900 mb-2">{team.team_name}</h3>
               {team.description && <p className="text-sm text-gray-500 mb-3 line-clamp-2">{team.description}</p>}
               <div className="flex flex-wrap gap-1 mb-3">
-                {team.required_skills.slice(0, 4).map((skill) => (
-                  <span key={skill} className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded">{skill}</span>
+                {(team.required_roles ?? []).slice(0, 4).map((role) => (
+                  <span key={role} className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded">{role}</span>
                 ))}
               </div>
               <div className="flex items-center justify-between mb-3">
                 <div className="text-sm text-gray-600">
-                  👥 {team.current_members}/{team.max_members}명
+                  👥 {team.current_count}/{team.max_size}명
                 </div>
                 <MannerBadge score={team.leader_manner_score ?? 36.5} />
               </div>
               <div className="mb-3 h-1.5 bg-gray-100 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-[#800020] rounded-full"
-                  style={{ width: `${Math.min(100, (team.current_members / team.max_members) * 100)}%` }}
+                  style={{ width: `${Math.min(100, (team.current_count / team.max_size) * 100)}%` }}
                 />
               </div>
               <div className="flex items-center justify-between">

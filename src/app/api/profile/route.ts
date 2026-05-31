@@ -17,7 +17,7 @@ export async function PATCH(request: NextRequest) {
   if (!user) return NextResponse.json({ error: '로그인이 필요합니다.' }, { status: 401 })
 
   const body = await request.json()
-  const allowed = ['nickname', 'department', 'student_id', 'bio', 'profile_image']
+  const allowed = ['nickname', 'department', 'student_id', 'full_name', 'avatar_url']
   const update: Record<string, unknown> = {}
   for (const key of allowed) {
     if (key in body) update[key] = body[key]

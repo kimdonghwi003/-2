@@ -12,20 +12,19 @@ type UserProfile = {
   id: string
   email: string
   nickname: string
-  profile_image: string | null
+  avatar_url: string | null
   manner_score: number
   department: string | null
   student_id: string | null
-  bio: string | null
+  full_name: string | null
 }
 
 type SportProfile = {
   sport: string
-  level: string
+  skill_level: string
   position: string | null
-  career: string | null
-  available_days: string[]
-  available_times: string[]
+  career_years: number
+  is_pro: boolean
 }
 
 export default function ProfilePage() {
@@ -51,10 +50,11 @@ export default function ProfilePage() {
     setProfile(p as UserProfile)
     setEditForm(p ?? {})
 
-    const { data: sp } = await supabase.from('sport_profiles').select('*').eq('user_id', user.id).single()
+    const { data: sp } = await supabase.from('sport_profiles').select('*').eq('user_id', user.id).limit(1).single()
     setSportProfile(sp as SportProfile)
 
-    const { data: matches } = await supabase.from('matches').select('id, title, sport, status, created_at').eq('host_id', user.id).order('created_at', { ascending: false })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: matches } = await (supabase as any).from('matches').select('id, team_name, sport, status, created_at').eq('author_id', user.id).order('created_at', { ascending: false })
     setMyMatches(matches ?? [])
 
     const { data: teams } = await supabase.from('contest_teams').select('id, team_name, status, created_at').eq('leader_id', user.id).order('created_at', { ascending: false })
@@ -76,8 +76,6 @@ export default function ProfilePage() {
   }
 
   if (!profile) return <div className="text-center py-20 text-gray-400">불러오는 중...</div>
-
-  const LEVEL_KO: Record<string, string> = { beginner: '입문', intermediate: '중급', advanced: '고급', expert: '전문' }
 
   return (
     <div>
@@ -115,6 +113,12 @@ export default function ProfilePage() {
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#800020] text-sm" />
             </div>
             <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">실명</label>
+              <input value={editForm.full_name ?? ''} onChange={(e) => setEditForm({ ...editForm, full_name: e.target.value })}
+                placeholder="실명을 입력하세요"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#800020] text-sm" />
+            </div>
+            <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">학과</label>
               <input value={editForm.department ?? ''} onChange={(e) => setEditForm({ ...editForm, department: e.target.value })}
                 placeholder="예: 컴퓨터공학과"
@@ -125,12 +129,6 @@ export default function ProfilePage() {
               <input value={editForm.student_id ?? ''} onChange={(e) => setEditForm({ ...editForm, student_id: e.target.value })}
                 placeholder="예: 2024XXXX"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#800020] text-sm" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">자기소개</label>
-              <textarea rows={3} value={editForm.bio ?? ''} onChange={(e) => setEditForm({ ...editForm, bio: e.target.value })}
-                placeholder="자기소개를 입력하세요"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#800020] text-sm resize-none" />
             </div>
             <button onClick={saveProfile} disabled={saving}
               className="w-full py-2.5 bg-[#800020] text-white rounded-lg font-semibold hover:bg-[#5c1a24] transition-colors disabled:opacity-50">
@@ -146,10 +144,10 @@ export default function ProfilePage() {
           {sportProfile ? (
             <div className="space-y-2 text-sm">
               <div><span className="font-medium">종목:</span> {sportProfile.sport}</div>
-              <div><span className="font-medium">수준:</span> {LEVEL_KO[sportProfile.level] ?? sportProfile.level}</div>
+              <div><span className="font-medium">수준:</span> {sportProfile.skill_level}</div>
               {sportProfile.position && <div><span className="font-medium">포지션:</span> {sportProfile.position}</div>}
-              {sportProfile.career && <div><span className="font-medium">경력:</span> {sportProfile.career}</div>}
-              <div><span className="font-medium">가능 요일:</span> {sportProfile.available_days.join(', ')}</div>
+              <div><span className="font-medium">경력:</span> {sportProfile.career_years}년</div>
+              {sportProfile.is_pro && <div className="text-[#800020] font-medium">선출</div>}
             </div>
           ) : (
             <p className="text-gray-400 text-sm">스포츠 프로필이 없습니다.</p>
@@ -173,11 +171,11 @@ export default function ProfilePage() {
             <div key={m.id as string} className="bg-white rounded-xl border border-[#f4aaba] p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="font-medium text-sm">{m.title as string}</p>
+                  <p className="font-medium text-sm">{m.team_name as string}</p>
                   <p className="text-xs text-gray-500">{m.sport as string}</p>
                 </div>
-                <span className={`px-2 py-1 text-xs rounded-full ${m.status === 'open' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
-                  {m.status === 'open' ? '모집 중' : '마감'}
+                <span className={`px-2 py-1 text-xs rounded-full ${m.status === '모집중' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
+                  {m.status === '모집중' ? '모집 중' : m.status as string}
                 </span>
               </div>
             </div>
@@ -194,8 +192,8 @@ export default function ProfilePage() {
             <div key={t.id as string} className="bg-white rounded-xl border border-[#f4aaba] p-4">
               <div className="flex items-center justify-between">
                 <p className="font-medium text-sm">{t.team_name as string}</p>
-                <span className={`px-2 py-1 text-xs rounded-full ${t.status === 'recruiting' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
-                  {t.status === 'recruiting' ? '모집 중' : '완성'}
+                <span className={`px-2 py-1 text-xs rounded-full ${t.status === '모집중' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
+                  {t.status === '모집중' ? '모집 중' : t.status as string}
                 </span>
               </div>
             </div>
@@ -210,11 +208,10 @@ export default function ProfilePage() {
             <div className="bg-white rounded-xl border border-[#f4aaba] p-6 text-center text-gray-400">받은 후기가 없습니다.</div>
           ) : myReviews.map((r) => (
             <div key={r.id as string} className="bg-white rounded-xl border border-[#f4aaba] p-4">
-              <div className="flex items-center justify-between mb-1">
+              <div className="flex items-center justify-between">
                 <span className="text-yellow-400">{'★'.repeat(r.rating as number)}{'☆'.repeat(5 - (r.rating as number))}</span>
                 <span className="text-xs text-gray-400">{new Date(r.created_at as string).toLocaleDateString('ko-KR')}</span>
               </div>
-              {r.comment && <p className="text-sm text-gray-600">{r.comment as string}</p>}
             </div>
           ))}
         </div>
@@ -252,7 +249,7 @@ function ReportForm() {
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">신고 대상 ID</label>
         <input required value={form.reported_id} onChange={(e) => setForm({ ...form, reported_id: e.target.value })}
-          placeholder="사용자 ID"
+          placeholder="사용자 UUID"
           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#800020] text-sm" />
       </div>
       <div>
@@ -260,11 +257,10 @@ function ReportForm() {
         <select required value={form.reason} onChange={(e) => setForm({ ...form, reason: e.target.value })}
           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#800020] text-sm bg-white">
           <option value="">선택하세요</option>
-          <option value="spam">스팸/광고</option>
-          <option value="abuse">욕설/비방</option>
-          <option value="inappropriate">부적절한 컨텐츠</option>
-          <option value="no_show">노쇼</option>
-          <option value="other">기타</option>
+          <option value="불쾌한 언행">불쾌한 언행</option>
+          <option value="허위 정보">허위 정보</option>
+          <option value="스팸">스팸</option>
+          <option value="기타">기타</option>
         </select>
       </div>
       <div>

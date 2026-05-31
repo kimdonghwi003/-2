@@ -7,30 +7,22 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import MannerBadge from '@/components/MannerBadge'
 
-const SPORT_OPTIONS = ['전체', '풋살', '농구', '테니스', 'e스포츠', '배드민턴', '야구', '기타']
-const LEVEL_OPTIONS = ['전체', 'beginner', 'intermediate', 'advanced', 'expert']
-const LEVEL_KO: Record<string, string> = {
-  beginner: '입문',
-  intermediate: '중급',
-  advanced: '고급',
-  expert: '전문',
-  any: '무관',
-}
-const TYPE_KO: Record<string, string> = { recruit: '팀원모집', vs: '대결' }
+const SPORT_OPTIONS = ['전체', '축구', '풋살', '농구', 'e스포츠']
+const LEVEL_OPTIONS = ['전체', '초급', '중급', '고수']
 
 type MatchRow = {
   id: string
-  title: string
+  team_name: string
   sport: string
-  match_type: string
-  level: string
+  match_size: string
+  required_level: string
   location: string
-  scheduled_at: string
+  match_datetime: string
   max_players: number
-  current_players: number
+  display_count: number
   status: string
-  host_nickname: string
-  host_manner_score: number
+  author_nickname: string
+  author_manner_score: number
 }
 
 export default function MatchListPage() {
@@ -51,14 +43,15 @@ export default function MatchListPage() {
 
   async function fetchMatches() {
     setLoading(true)
-    let query = supabase
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let query = (supabase as any)
       .from('v_match_list')
       .select('*')
-      .eq('status', 'open')
+      .eq('status', '모집중')
       .order('created_at', { ascending: false })
 
     if (sport !== '전체') query = query.eq('sport', sport)
-    if (level !== '전체') query = query.eq('level', level)
+    if (level !== '전체') query = query.eq('required_level', level)
 
     const { data } = await query
     setMatches((data as MatchRow[]) ?? [])
@@ -104,7 +97,7 @@ export default function MatchListPage() {
                   : 'bg-white border border-gray-200 text-gray-600 hover:border-[#5c1a24] hover:text-[#5c1a24]'
               }`}
             >
-              {l === '전체' ? '전체 레벨' : LEVEL_KO[l] ?? l}
+              {l === '전체' ? '전체 레벨' : l}
             </button>
           ))}
         </div>
@@ -129,23 +122,23 @@ export default function MatchListPage() {
                     {m.sport}
                   </span>
                   <span className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-full">
-                    {TYPE_KO[m.match_type] ?? m.match_type}
+                    {m.match_size}
                   </span>
                 </div>
-                <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">{m.title}</h3>
+                <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">{m.team_name}</h3>
                 <div className="text-sm text-gray-500 space-y-1">
                   <div>📍 {m.location}</div>
-                  <div>🗓️ {new Date(m.scheduled_at).toLocaleString('ko-KR', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</div>
-                  <div>👥 {m.current_players}/{m.max_players}명 · {LEVEL_KO[m.level] ?? m.level}</div>
+                  <div>🗓️ {new Date(m.match_datetime).toLocaleString('ko-KR', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</div>
+                  <div>👥 {m.display_count}/{m.max_players}명 · {m.required_level}</div>
                 </div>
                 <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100">
-                  <span className="text-sm text-gray-600">{m.host_nickname}</span>
-                  <MannerBadge score={m.host_manner_score ?? 36.5} />
+                  <span className="text-sm text-gray-600">{m.author_nickname}</span>
+                  <MannerBadge score={m.author_manner_score ?? 36.5} />
                 </div>
                 <div className="mt-2 h-1.5 bg-gray-100 rounded-full overflow-hidden">
                   <div
                     className="h-full bg-[#800020] rounded-full transition-all"
-                    style={{ width: `${Math.min(100, (m.current_players / m.max_players) * 100)}%` }}
+                    style={{ width: `${Math.min(100, (m.display_count / m.max_players) * 100)}%` }}
                   />
                 </div>
               </div>

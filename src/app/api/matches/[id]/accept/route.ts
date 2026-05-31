@@ -9,8 +9,8 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
   const { application_id } = await request.json()
 
-  const { data: match } = await supabase.from('matches').select('host_id').eq('id', id).single()
-  if (!match || match.host_id !== user.id) return NextResponse.json({ error: '권한이 없습니다.' }, { status: 403 })
+  const { data: match } = await supabase.from('matches').select('author_id').eq('id', id).single()
+  if (!match || match.author_id !== user.id) return NextResponse.json({ error: '권한이 없습니다.' }, { status: 403 })
 
   const { data: app } = await supabase.from('match_applications').select('applicant_id').eq('id', application_id).single()
   if (!app) return NextResponse.json({ error: '신청을 찾을 수 없습니다.' }, { status: 404 })
@@ -25,9 +25,8 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   await supabase.from('notifications').insert({
     user_id: app.applicant_id,
     type: 'match_accept',
-    title: '매치 신청 수락',
-    body: '매치 신청이 수락되었습니다.',
-    link: `/match/${id}`,
+    message: '매치 신청이 수락되었습니다.',
+    related_id: id,
   })
 
   return NextResponse.json({ success: true })
